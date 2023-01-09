@@ -1,37 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MdAdd } from 'react-icons/md'
+import useSWR from 'swr'
 
+// import { useApp } from "../../lib/useApp";
 
-import RecipeModel from "../../models/recipe";
 import Layout from "../../components/Layout";
 import { useEffect, useState } from "react";
 import RecipeCard from "../../components/Card";
 
 
+const fetcher = (arg: any, ...args: any) => fetch(arg, ...args).then(res => res.json())
+
+
 function RecipeListPage() {
-  const [recipes, setRecipes] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { data, error, isLoading } = useSWR('/api/recipes', fetcher)
 
-  useEffect(() => {
-
-    
-    const getRecipes = async () => {
-      const REALM_APP_ID = String(process.env.NEXT_PUBLIC_REALM_APP_ID)
-      const app = new Realm.App({ id: REALM_APP_ID });
-      const credentials = Realm.Credentials.anonymous();
-      try {
-        const user = await app.logIn(credentials)
-        const allRecipes = await user.functions.getAllRecipes()
-        setRecipes(() => allRecipes)
-        setIsLoading(false)
-      } catch (error) {
-        console.log("Hubo un error", error)
-      }
-    }
-
-    getRecipes();
-  }, [])
+  if(error) return <p>aiiuda</p>
 
   return (
     <Layout>
@@ -40,17 +25,17 @@ function RecipeListPage() {
       {isLoading &&
         <p>Fetching Data</p>
       }
-      {recipes ?
+      {data ?
         <div>
-          <div className="flex mt-4 gap-4">
-            {recipes &&
-              recipes.map((recipe, i) => {
+          <div className="flex flex-wrap mt-4 gap-4 place-content-start md:place-content-start md:gap-x-4">
+            {data.allRecipes &&
+              data.allRecipes.map((recipe: any, i: number) => {
                 console.log(recipe)
                 return (
                   <RecipeCard
                     key={i}
                     label={recipe.name}
-                    category={String(recipe.categoryId)}
+                    category={String(recipe.category.categoryName)}
                     href={`/recipes/${recipe._id}`}
                   />
                 )

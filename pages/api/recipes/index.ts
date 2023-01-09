@@ -1,7 +1,6 @@
-import dbConnect from "../../lib/mongots";
+import dbConnect from "../../../lib/mongots";
 import type { NextApiRequest, NextApiResponse } from 'next'
-import CategoryModel from "../../models/category";
-
+import RecipeModel from "../../../models/recipe";
 
 
 export default async function handler(
@@ -10,10 +9,19 @@ export default async function handler(
   ) {
     try{
         await dbConnect();
-        const categories = CategoryModel;
-        const allCategories = await CategoryModel.find({});
+        // const categories = CategoryModel;
+        const allRecipes = await RecipeModel.aggregate(
+          [{$lookup: {
+            from: "categories",
+            localField: "categoryId",
+            foreignField: "_id",
+            as: "category"
+          }},
+            {$unwind: '$category'}
+          ]
+        );
 
-        res.status(200).json({ allCategories })
+        res.status(200).json({ allRecipes })
     } catch (err){
         console.log(err);
         res.status(500).json({error: err});

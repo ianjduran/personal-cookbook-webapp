@@ -3,18 +3,29 @@
 
 import mongoose, { models, model, Schema } from 'mongoose';
 
+interface Iingredient {
+    name: String,
+    amount: Number,
+    unit: String,
+}
+
 interface IRecipe {
     name: string;
     categoryId: Schema.Types.ObjectId;
     numServings: number;
     cookTime: number; // mins
     cookType: string;
-    ingredients: [{
-        name: string,
-        amount: string, // Qty + unit
-    }];
+    ingredients: [Iingredient];// Qty + unit
     recipeSteps: string;
 }
+
+
+
+const Ingredients = new Schema<Iingredient>({
+    name: String,
+    amount: Number,
+    unit: String
+})
 
 
 const RecipeSchema = new Schema<IRecipe>({
@@ -39,18 +50,18 @@ const RecipeSchema = new Schema<IRecipe>({
         type: String,
         required: true
     },
-    ingredients: {
-        name: String,
-        amount: Number,
-        unit: String,
-        required: true
-    },
+    ingredients: [{
+            type: Ingredients,
+            required: true
+        }
+    ],
     recipeSteps: {
         type: String,
         required: true
     },
 
 }, { timestamps: true })
+
 
 const RecipeModel = models.Recipe as mongoose.Model<IRecipe> || model<IRecipe>('Recipe', RecipeSchema);
 
