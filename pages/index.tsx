@@ -1,32 +1,20 @@
-'use client';
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
+import useSWR from 'swr'
+
 import RecipeCard from '../components/Card'
 import Layout from '../components/Layout'
 import SearchBar from '../components/SearchBar'
-import Image from 'next/image'
-import useSWR from 'swr'
 import icons from '../lib/Icons';
-import { useApp } from '../lib/useApp';
-import { useEffect } from 'react';
-
 
 const fetcher = (arg: any, ...args: any) => fetch(arg, ...args).then(res => res.json())
 
 
 const Home: NextPage = () => {
   const { data, error, isLoading } = useSWR('/api/categories', fetcher)
-  const app = useApp()
 
-  useEffect(() => {
-    if (app && !app.currentUser) {
-      const anonymousUser = Realm.Credentials.anonymous();
-      app.logIn(anonymousUser);
-    }
-  }, [app, app?.currentUser, app?.currentUser?.id]);
-
-
+  
+  
 
   return (
     <div>

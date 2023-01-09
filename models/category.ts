@@ -1,5 +1,6 @@
 import mongoose, { models, model, Schema } from 'mongoose';
 
+// Todo: Add Color
 interface ICategory {
   categoryName: string;
   iconPath: string;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 
 import {FiSave} from 'react-icons/fi'
 
@@ -38,12 +39,16 @@ export default function CategoryForm({ setClosed} : any , { ...props }) {
       setCategoryName('')
       setSelectedIcon('')
       setIsSaving(false)
-      setClosed(false)
+      
+      toast("Categoria Añadida con éxito")
+
+      setTimeout(setClosed(false), 2000)
     }
   }
 
   return (
     <div>
+      <ToastContainer/>
       <h3 className='mb-2 text-lg font-medium font-subtitle'>Crear Categoria</h3>
       <div className='flex flex-wrap gap-8 md:flex-nowrap'>
 
