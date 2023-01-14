@@ -4,8 +4,6 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet"></link>
-
       </Head>
       <body>
         <Main />

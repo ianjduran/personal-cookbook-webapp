@@ -60,7 +60,11 @@ const Home: NextPage = () => {
           </div>
 
           {/* Categorias */}
-          <h2 className='text-3xl font-bold font-header'>Categorias</h2>
+          <div className='flex gap-4 items-baseline'>
+            
+            <h2 className='text-3xl font-bold font-header'>Categorias</h2>
+            <button className='uppercase text-xs font-bold font-Kanit tracking-wider' >Ver Más</button>
+          </div>
 
           
           

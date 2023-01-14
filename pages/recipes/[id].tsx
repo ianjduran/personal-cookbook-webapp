@@ -11,18 +11,20 @@ import RecipeDetail from "../../components/RecipeDetail";
 export default function RecipeDetails() {
   const [isLoading, setLoading] = useState(false)
   const [recipeData, setRecipeData] = useState<any>()
-  const { query } = useRouter()
-
+  const router = useRouter()
+  
 
   useEffect(() => {
+    if(!router.isReady) return;
+    
     setLoading(true)
-    fetch(`/api/recipes/${query.id}`)
+    fetch(`/api/recipes/${router.query.id}`)
       .then((res) => res.json())
       .then((data) => {
         setRecipeData(() => data)
         setLoading(false)
       })
-  }, [])
+  }, [router.isReady])
 
 
   return (

@@ -9,12 +9,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'subtitle' : 'Kanit',
-        'header' : 'Ubuntu'
+        subtitle : 'var(--font-kanit)',
+        header : 'var(--font-ubuntu)'
       },
       screens: {
         'tablet': '640px',
-         // => @media (min-width: 640px) { ... }
+         // => @media (min-width: 640px) { ... }g
       }
     },
     

@@ -16,7 +16,7 @@ export default function Layout({ children }: Props) {
     <div className='justify-start bg-slate-50 dark:bg-slate-800 dark:text-white'>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-      
+        <title>Mi Recetario</title>
       </Head>
 
       <div className='flex flex-col tablet:flex-row-reverse '>
