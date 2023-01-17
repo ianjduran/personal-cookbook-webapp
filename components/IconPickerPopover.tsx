@@ -5,10 +5,9 @@ import icons from "../lib/Icons"
 import { Transition, Popover } from "@headlessui/react"
 
 
-export default function IconPicker({ onChange }: { onChange: Function }) {
+export default function IconPicker({value, onChange }: {value: string, onChange: Function }) {
 
-    const [SelectedIcon, setSelectedIcon] = useState(Object.keys(icons)[0]) // State to Select Icon'
-    // const SelectedIcon = value ?? Object.keys(icons)[0]
+    const SelectedIcon = value ?? Object.keys(icons)[0]
     const IconButton = icons[SelectedIcon] // Component with the value of the selected Icon
     return (
         <Popover>
@@ -34,7 +33,6 @@ export default function IconPicker({ onChange }: { onChange: Function }) {
                                     return (
                                         <div className="transition-all ease-out rounded-md text-slate-700 hover:shadow-md hover:border-slate-100 hover:bg-slate-100 hover:text-slate-800 " onClick={() => {
                                             onChange(icon); // Sets the new selected Icon
-                                            setSelectedIcon(icon)
                                             close()
                                         }} key={i}><Icon className='w-8 h-8 m-1' /></div>
                                     )

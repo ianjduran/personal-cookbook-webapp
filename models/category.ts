@@ -1,9 +1,9 @@
 import mongoose, { models, model, Schema } from 'mongoose';
 
-// Todo: Add Color
-interface ICategory {
+export interface ICategory {
   categoryName: string;
   iconPath: string;
+  color: string
 }
 
 const CategorySchema = new Schema<ICategory>({
@@ -15,6 +15,10 @@ const CategorySchema = new Schema<ICategory>({
     type: String,
     required: true
   },
+  color: {
+    type: String,
+    required: true
+  }
 });
 
 const CategoryModel = models.Category as mongoose.Model<ICategory> || model<ICategory>('Category', CategorySchema);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SyntheticEvent } from "react";
+import React, { useState, useReducer, SyntheticEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 import { FiSave } from "react-icons/fi";
@@ -7,29 +7,73 @@ import IconPicker from "./IconPickerPopover";
 import ColorPicker from "./ColorPicker";
 import icons from "../lib/Icons";
 import { useRouter } from "next/router";
+import { ICategory } from "../models/category";
+import { type } from "os";
 
 // TODO: setClosed Any -> Function
+
+const initialCategoryState = {
+  categoryName: "",
+  iconPath: Object.keys(icons)[0],
+  color: "",
+};
+
+// An interface for our actions
+type ReducerAction =
+  | {type: ReducerActionType.CHANGE_NAME; payload: string}
+  | {type: ReducerActionType.CHANGE_ICON; payload: string}
+  | {type: ReducerActionType.CHANGE_COLOR; payload: string}
+
+enum ReducerActionType {
+  CHANGE_NAME,
+  CHANGE_ICON,
+  CHANGE_COLOR,
+}
+
+function reducer(state: ICategory, action: ReducerAction): ICategory {
+  switch (action.type) {
+    case ReducerActionType.CHANGE_NAME:
+      return {
+        ...state,
+        categoryName: action.payload
+      };
+    case ReducerActionType.CHANGE_ICON:
+      return {
+        ...state,
+        iconPath: action.payload
+      };
+    case ReducerActionType.CHANGE_COLOR:
+      return {
+        ...state,
+        color: action.payload
+      };
+    default:
+      return state;
+  }
+}
+
 export default function CategoryForm({ setClosed }: any, { ...props }) {
   const router = useRouter();
 
-  const [categoryName, setCategoryName] = useState(" ");
-  const [selectedIcon, setSelectedIcon] = useState(Object.keys(icons)[0]);
-  const [colorIcon, setColorIcon] = useState("");
-  const ChosenIcon = icons[selectedIcon];
+
+  const [categoryState, dispatch] = useReducer(reducer, initialCategoryState)
+
+  const ChosenIcon = icons[categoryState.iconPath];
   const [uploadState, setUploadState] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
-    if (!selectedIcon) {
+    if (!categoryState.iconPath) {
       alert("Por favor llena los campos");
     } else {
       setIsSaving(true);
       setUploadState("Guardando Cambios... Por favor espere");
       const res = await fetch("/api/categories/create", {
         body: JSON.stringify({
-          categoryName: categoryName,
-          iconPath: selectedIcon,
+          categoryName: categoryState.categoryName,
+          iconPath: categoryState.iconPath,
+          color: categoryState.color
         }),
         method: "POST",
       });
@@ -37,8 +81,6 @@ export default function CategoryForm({ setClosed }: any, { ...props }) {
       console.log(result);
       // TODO: Manage State Save
       setUploadState("Se creó la categoría ✔");
-      setCategoryName("");
-      setSelectedIcon("");
       setIsSaving(false);
 
       toast("Categoria Añadida con éxito");
@@ -64,7 +106,11 @@ export default function CategoryForm({ setClosed }: any, { ...props }) {
               className="px-2 py-1 border rounded-md shadow-md dark:text-slate-800 font-subtitle caret-blue-500 focus:outline-blue-500 focus:border-blue-500"
               type="text"
               placeholder="Ejemplo: Pasteleria"
-              onChange={(e) => setCategoryName(e.target.value)}
+              value={categoryState.categoryName}
+              onChange={(e) => dispatch({
+                type: ReducerActionType.CHANGE_NAME,
+                payload: e.target.value
+              })}
             />
           </div>
 
@@ -75,7 +121,10 @@ export default function CategoryForm({ setClosed }: any, { ...props }) {
               Icono
             </label>
             {/* <IconPicker onChange={setSelectedIcon} /> */}
-            <IconPicker onChange={setSelectedIcon} />
+            <IconPicker value={categoryState.iconPath} onChange={(icon: string) => (dispatch({
+              type: ReducerActionType.CHANGE_ICON,
+              payload: icon
+            }))}/>
           </div>
 
           {/* setIcon hacia otro componente */}
@@ -83,7 +132,10 @@ export default function CategoryForm({ setClosed }: any, { ...props }) {
             <label className="block text-lg font-bold  font-subtitle">
               Color
             </label>
-            <ColorPicker onChange={setColorIcon} />
+            <ColorPicker onChange={(color: string) => dispatch({
+              type: ReducerActionType.CHANGE_COLOR,
+              payload: color
+            })} />
           </div>
           <button
             disabled={isSaving}
@@ -105,8 +157,8 @@ export default function CategoryForm({ setClosed }: any, { ...props }) {
           </h1>
           {/* Oculto hasta que se selecciona uno */}
           {/* {selectedIcon && <Obj className={`h-16 w-16 mb-4`} style={colorIcon}/>} */}
-          <ChosenIcon className={`h-16 w-16`} color={colorIcon ?? "black"} />
-          <p> {categoryName} </p>
+          <ChosenIcon className={`h-16 w-16`} color={categoryState.color ?? "black"} />
+          <p> {categoryState.categoryName} </p>
         </div>
       </div>
     </div>
