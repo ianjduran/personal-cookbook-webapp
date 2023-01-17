@@ -79,14 +79,14 @@ const Home: NextPage = () => {
               </div>
             }
             {data &&
-              data.allCategories.map(({ _id, categoryName, iconPath }: { _id: String, categoryName: String, iconPath: string }) => {
+              data.allCategories.map(({ _id, categoryName, iconPath, color }: { _id: String, categoryName: String, iconPath: string, color: string }) => {
                 const Icon = icons[iconPath] ?? Object.keys(icons)[0]
                 return (
                   <div className="inline-flex  flex-col items-center justify-center w-40 p-4 text-center transition ease-out bg-white border rounded-md shadow-md shadow-slate-400 hover:shadow-lg hover:shadow-slate-400 dark:bg-slate-700 dark:border-none dark:shadow-none dark:hover:shadow-none dark:hover:bg-slate-600"
                     key={`category_${categoryName}`}>
-                    <p className='text-xs font-medium tracking-wider uppercase font-subtitle'>Categoria</p>
-                    <Icon className={'h-8 w-8'} />
-                    <h2 className='inline-block font-medium text-md tablet:text-xl font-subtitle'>{categoryName}</h2>
+                    {/* <p className='text-xs font-medium tracking-wider uppercase font-subtitle'>Categoria</p> */}
+                    <Icon className={`h-8 w-8`} color={color ?? "black"}  />
+                    <p className='leading-tight tablet:leading-snug  inline-block font-medium text-md tablet:text-lg font-subtitle'>{categoryName}</p>
                   </div>
 
                 )

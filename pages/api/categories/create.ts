@@ -15,7 +15,8 @@ export default async function handler(
 
     const category = new CategoryModel({
       categoryName: body.categoryName,
-      iconPath: body.iconPath
+      iconPath: body.iconPath,
+      color: body.color
     });
 
     console.log(category)
